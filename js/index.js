@@ -68,14 +68,16 @@ function init() {
 function spawnEnemiesLoop() {
   let delay = difficultMax - difficult
   ennemyLoop = setInterval(() => {
-    spawnEnemy()
+    if (!isPaused) {
+      spawnEnemy()
+    }
   }, delay * 200 + 200);
 }
 
 
 function spawnEnemy(type = 'mob') {
     // random radius
-    const radius = type === 'boss'? 60 : Math.random() * (30 - 4) + 4;
+    const radius = type === 'boss'? 70 : Math.random() * (30 - 4) + 4;
 
     // random red, green and blue value
     const r = Math.floor(Math.random() * 256);
@@ -174,6 +176,7 @@ function animate() {
         projectile.y - enemy.y
       );
       if (distance - projectile.radius - enemy.radius <= 0) {
+
         // particles creation
         for (let i = 0; i < 8; i++) {
           particles.push(
@@ -191,50 +194,38 @@ function animate() {
         }
 
         
+        // -------------------------------------------------
+        // HIT
+        // -------------------------------------------------
         // reduce the radius of enemy or remove enemy
-        if (projectile.type === 'rocket') {
-          if (enemy.type === 'boss') {
-            score += 200;
-            gsap.to(enemy, {
-              radius: enemy.radius - 20,
-            });
-            setTimeout(() => {
-              if (projectile.type !== 'infinity') projectiles.splice(projectileIndex, 1);
-            }, 0);
-          } else {
-            score += 250;
-            playSound('explosive')
-            setTimeout(() => {
-              enemies.splice(enemyIndex, 1);
-            }, 0);
-          }
+        let degat = (projectile.type === 'rocket') ? 25 : 10
 
-        } else if (enemy.radius - 10 > 5) {
-          score += 100;
+        if (enemy.radius - degat > 5) {   // alive
+          score += degat * 10;  
           gsap.to(enemy, {
-            radius: (enemy.type === 'boss') ? enemy.radius - 10 : enemy.radius - 10,
+            radius: enemy.radius - degat,
           });
-          setTimeout(() => {
-            if (projectile.type !== 'infinity') projectiles.splice(projectileIndex, 1);
-          }, 0);
 
-        } else {
-          // increase our score
+        } else { // kill confirmed
           if (enemy.type === 'boss') {
-            score += 1000;
             playSound('boss') 
             addBonus()
+            score += 1000;
           } else {
+            playSound('explosive')
             score += 250;
           }
-          playSound('explosive')
-          setTimeout(() => {
-            enemies.splice(enemyIndex, 1);
-            if (projectile.type !== 'infinity') projectiles.splice(projectileIndex, 1);
-          }, 0);
+          
         }
-        scoreEl.innerText = score;
 
+        // Remove or Not projectile
+        setTimeout(() => {
+          if ( (projectile.type === 'normal') || (projectile.type === 'rocket' && enemy.type === 'boss') ) {
+            projectiles.splice(projectileIndex, 1);
+          } 
+        }, 0);
+        scoreEl.innerText = score;
+        
 
         // Check and update difficult base on score
         let dif = Math.floor( score / (2000 + difficult*difficultBase) );
@@ -307,8 +298,8 @@ function animate() {
 // -------------------------------------------------------------
 // ACTION
 // -------------------------------------------------------------
+// loopShoot for Infinity Bullet
 function loopShoot(projectile) {
-  // console.log('green hit floor')
   const angle = Math.atan2(projectile.y - player.y, projectile.x - player.x);
   const velocity = {
     x: Math.cos(angle) * 5,
