@@ -215,7 +215,9 @@ function animate() {
             playSound('explosive')
             score += 250;
           }
-          
+          setTimeout(() => {
+            enemies.splice(enemyIndex, 1);
+          }, 0);
         }
 
         // Remove or Not projectile
