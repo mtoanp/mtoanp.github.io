@@ -21,7 +21,7 @@ body {
 
 #modalEl .bg-white {
     border: 2px solid #bf18958f;
-    height: 460px;
+    height: 450px;
     /* width: 500px; */
     border-radius: 10px;
     background-color: #6e217d21;
@@ -62,7 +62,7 @@ body {
     font-style: italic; 
 }
 #guideEl p {
-    padding: 0.2em 0; 
+    padding: 0.3em 0; 
 }
 
 #score-container, #bonus-container, #mto-container {
@@ -87,6 +87,24 @@ body {
 #mto-container {
     left: 1em;
     bottom: 1em;
+}
+
+.controlEl {
+    width: 350px;
+    position: absolute;
+    bottom: 2em;
+    /* font-weight: normal; */
+    text-align: center;
+}
+
+#startGameBtn {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+#startGameBtn:hover {
+    background-color: rgb(107, 175, 235);
+    color: rgb(104, 255, 117);
+    transition: background-color 1s ease, color 3s ease;
 }
 
 @keyframes shake {
