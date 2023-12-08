@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS Game with OOP</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.8.13/tailwind.min.css"
+        integrity="sha512-KO1h5ynYuqsFuEicc7DmOQc+S9m2xiCKYlC3zcZCSEw0RGDsxcMnppRaMZnb0DdzTDPaW22ID/gAGCZ9i+RT/w=="
+        crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <audio id="gunshotEl" src="./audio/gunshot.mp3" preload="auto"></audio>
+    <audio id="rocketEl" src="./audio/rocket.mp3" preload="auto"></audio>
+    <audio id="infinityEl" src="./audio/infinity.mp3" preload="auto"></audio>
+    <audio id="explosiveEl" src="./audio/pop.mp3" preload="auto"></audio>
+    <audio id="bossEl" src="./audio/boss.mp3" preload="auto"></audio>
+    <audio id="selfEl" src="./audio/self.mp3" preload="auto"></audio>
+
+    <div id="score-container"
+      class="fixed text-white text-sm ml-2 mt-1 select-none"
+    >
+      <p>Score: <span id="scoreEl">0</span></p>
+      <p>Difficult: <span id="difficultEl">0</span></p>
+    </div>
+
+    <div id="bonus-container" class="right">
+      <div id="bonusEl">+ 0/0</div>
+    </div>
+
+    <div id="mto-container" class="">
+      <div id="mto">by mto</div>
+    </div>
+
+    <div id="modalEl"
+      class="shake-element fixed inset-0 flex items-center justify-center text-center"
+    >
+      <div id='modalContentEl' class="bg-white max-w-md w-full p-6">
+        <div class="">
+          <h1 class="text-4xl font-bold leading-none" id="bigScoreEl">0</h1>
+          <p class="points mb-4">Points</p>
+        </div>
+
+        <div id="guideEl">
+          <p>Autoshooting every 0.5s</p>
+          <p>Left  Clkick: Rocket (max 4/ charge every 3s)</p>
+          <p>Right Clkick: Infinity Bullet (stock: 4)</p>
+          <p>Kill boss to get the bonus</p>
+        </div>
+
+        <div>
+          <div id="difficultBig">Difficult 0</div>
+          <button id="startGameBtn"
+            class="bg-blue-500 text-white w-full py-3 rounded-full text-md"
+          >
+            Start Game
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <canvas id="container-game"></canvas>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
+      integrity="sha512-cdV6j5t5o24hkSciVrb8Ki6FveC2SgwGfLE31+ZQRHAeSRxYhAQskLkq3dLm8ZcWe1N3vBOEYmmbhzf7NTtFFQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script type="module" src="./js/index.js"></script>
+  </body>
+</html>
