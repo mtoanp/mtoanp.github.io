@@ -288,7 +288,7 @@ function animate() {
       clearInterval(ennemyLoop);      // Clear the existing interval
       spawnEnemiesLoop()              // Call with new Interval
       difficultEl.innerHTML = difficult;
-      if ([1, 3, 6, 9].includes(difficult)) spawnEnemy('boss')
+      if ([3, 6, 9].includes(difficult)) spawnEnemy('boss')
     } 
 
 
