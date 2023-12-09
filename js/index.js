@@ -28,12 +28,15 @@ const modalContentEl = document.getElementById("modalContentEl");
 const guideEl = document.getElementById("guideEl");
 const bigScoreEl = document.getElementById("bigScoreEl");
 
-const gunshotSound = document.getElementById("gunshotSoundEl");
-const rocketSound = document.getElementById("rocketSoundEl");
-const infinitySound = document.getElementById("infinitySoundEl");
-const explosiveSound = document.getElementById("explosiveSoundEl");
-const bossSound = document.getElementById("bossSoundEl");
-const selfSound = document.getElementById("selfSoundEl");
+// Audi Resources
+const gunshotSound = '../audio/gunshot.mp3'
+const rocketSound = '../audio/rocket.mp3'
+const infinitySound = '../audio/infinity.mp3'
+const explosiveSound = '../audio/pop.mp3'
+const bossSound = '../audio/boss.mp3'
+const selfSound = '../audio/self.mp3'
+
+// Setup
 modalContentEl.classList.add('gamestart')
 mtoEl.innerHTML = 'by mto'
 
@@ -458,8 +461,13 @@ document.addEventListener("keydown", function(event) {
     if (!isPaused) {
       animate(); // If unpaused, start the animation again
     }
+  } else if(event.key === 'Enter') {
+    // Test
+    // audioEl.play()
+    playSound('rocket')
   }
 });
+
 
 
 
@@ -512,9 +520,11 @@ function playSound(type = 'gun') {
   }
 }
 
-function playSoundDetail(soundEl, volume, speed, repeat = 1) {
-    soundEl.volume = volume;
-    soundEl.playbackRate = speed;
-    soundEl.play();
+function playSoundDetail(audioSrc, volume, speed, repeat = 1) {
+    let audio = new Audio(audioSrc)
+    // audio.src = audioSrc
+    audio.volume = volume;
+    audio.playbackRate = speed;
+    audio.play();
 }
 // -------------------------------------------------------------
