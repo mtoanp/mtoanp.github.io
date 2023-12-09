@@ -362,6 +362,7 @@ const shooter = (x, y, type = 'normal') => {
 
 // click listener to add a new projectile in direction of the mouse pointer
 window.addEventListener("click", (event) => {
+  if(!isPaused) {
     let x = event.clientX
     let y = event.clientY 
     let type = 'normal'
@@ -372,51 +373,26 @@ window.addEventListener("click", (event) => {
       shooter(x, y)
     }
     playSound(type)
+  }
 });
 
 // click listener to add a new projectile in direction of the mouse pointer
 window.addEventListener("contextmenu", (event) => {
     event.preventDefault();
-    let x = event.clientX
-    let y = event.clientY 
-    let type = 'normal'
-    if (munition.infinityBullet > 0) {
-      shooter(x, y, 'infinity')
-      type = 'infinity'
-    } else {
-      shooter(x, y)
+    if(!isPaused) {
+      let x = event.clientX
+      let y = event.clientY 
+      let type = 'normal'
+      if (munition.infinityBullet > 0) {
+        shooter(x, y, 'infinity')
+        type = 'infinity'
+      } else {
+        shooter(x, y)
+      }
+      playSound(type)  
     }
-    playSound(type)  
 });
 
-function playSound(type = 'gun') {   
-  switch (type) {
-    case 'rocket':
-      playSoundDetail(rocketSound, 0.05, 3)
-      break;
-    case 'infinity':
-      playSoundDetail(infinitySound, 0.5, 1)
-      break;
-    case 'explosive':
-      playSoundDetail(explosiveSound, 0.2, 1.5)
-      break;
-    case 'boss':
-      playSoundDetail(bossSound, 0.5, 3)
-      break;
-    case 'self':
-      playSoundDetail(selfSound, 0.3, 1)
-      break;
-    default:
-      playSoundDetail(gunshotSound, 0.1, 5)
-      break;
-  }
-}
-
-function playSoundDetail(soundEl, volume, speed, repeat = 1) {
-    soundEl.volume = volume;
-    soundEl.playbackRate = speed;
-    soundEl.play();
-}
 
 function addBonus() {
   let msg, color
@@ -469,7 +445,7 @@ canvas.addEventListener("mouseout", function(event) {
 
 
 function chargeRocket() {
-  if (munition.rocketBullet < munition.rocketMax)
+  if (!isPaused && munition.rocketBullet < munition.rocketMax)
     rocketEl.innerHTML = ++munition.rocketBullet;
 }
 
@@ -509,3 +485,36 @@ window.addEventListener("mousemove", (event) => {
 setInterval(autoShooting, 400);
 setInterval(chargeRocket, 3000);
 
+
+// -------------------------------------------------------------
+// SOUND
+// -------------------------------------------------------------
+function playSound(type = 'gun') {   
+  switch (type) {
+    case 'rocket':
+      playSoundDetail(rocketSound, 0.05, 3)
+      break;
+    case 'infinity':
+      playSoundDetail(infinitySound, 0.5, 1)
+      break;
+    case 'explosive':
+      playSoundDetail(explosiveSound, 0.2, 1.5)
+      break;
+    case 'boss':
+      playSoundDetail(bossSound, 0.5, 3)
+      break;
+    case 'self':
+      playSoundDetail(selfSound, 0.3, 1)
+      break;
+    default:
+      playSoundDetail(gunshotSound, 0.1, 5)
+      break;
+  }
+}
+
+function playSoundDetail(soundEl, volume, speed, repeat = 1) {
+    soundEl.volume = volume;
+    soundEl.playbackRate = speed;
+    soundEl.play();
+}
+// -------------------------------------------------------------
