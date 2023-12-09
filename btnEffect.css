@@ -1,0 +1,81 @@
+#startGameBtn {
+    position: relative;
+	border: none;
+	outline: none;
+	text-transform: uppercase;
+	text-decoration: none;
+	text-align: center;
+	color: #ff0;
+	font-size: 30px;
+	font-family: verdana;
+	letter-spacing: 4px;
+    animation: colorAnimation 10s infinite alternate;
+}
+
+/* #startGameBtn span {border: 0;} */
+
+#startGameBtn::before,
+#startGameBtn::after,
+#startGameBtn span::before,
+#startGameBtn span::after {
+	content: '';
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	background: transparent;
+	transition: 1s;
+}
+
+/* #startGameBtn:active {
+	border: none !important;
+} */
+
+@keyframes colorAnimation {
+    0%, 100% { 
+        color: #ff0; 
+        /* color: #007bff;  */
+    }
+    25% { 
+        color: #007bff;
+    }
+    50% { 
+        color: #ff7f7f; 
+    }
+    75% { 
+        color: #f10e93; 
+    }
+}
+
+#startGameBtn::before {
+	top: -2px;
+	left: -2px;
+	border-top: 2px solid #ff0;
+	border-left: 2px solid #ff0;
+}
+#startGameBtn::after {
+	top: -2px;
+	right: -2px;
+	border-top: 2px solid #ff0;
+	border-right: 2px solid #ff0;
+}
+
+#startGameBtn span::before {
+	bottom: -2px;
+	left: -2px;
+	border-bottom: 2px solid #ff0;
+	border-left: 2px solid #ff0;
+}
+#startGameBtn span::after {
+	bottom: -2px;
+	right: -2px;
+	border-bottom: 2px solid #ff0;
+	border-right: 2px solid #ff0;
+}
+
+#startGameBtn:hover::before,
+#startGameBtn:hover::after,
+#startGameBtn:hover span::before,
+#startGameBtn:hover span::after  {
+	width: calc( 180px - 15px);
+	height: calc( 50px / 2);
+}

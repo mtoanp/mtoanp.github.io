@@ -15,6 +15,7 @@
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="btnEffect.css" />
   </head>
 
   <body>
@@ -56,19 +57,19 @@
         </div>
 
         <div id="guideEl">
-          <p>Auto-shooting every 0.5s</p>
-          <p>Left  Clkick: Rocket (every 3s / max 4)</p>
-          <p>Right Clkick: Infinity Bullet (stock: 4)</p>
-          <p>Kill Boss to get the bonus</p>
+          <p><span class="g-ctn">Auto-shooting </span> every 0.5s</p>
+          <p><span class="g-ctn">Left Click </span> Rocket (every 3s / max 4)</p>
+          <p><span class="g-ctn">Right Click </span> Infinity Bullet (stock: 4)</p>
+          <p><span class="g-ctn">Defeat bosses </span> to get the bonus</p>
           
         </div>
 
         <div>
-          <div id="difficultBig">Difficult 0</div>
+          <div id="difficultBig">Lv. 0</div>
           <button id="startGameBtn"
-            class="bg-blue-500 text-white w-full py-3 rounded-full text-md"
+            class="w-full py-3 text-md"
           >
-            Start Game
+            <span id="startGameBtnContent">Start Game</span>
           </button>
         </div>
       </div>

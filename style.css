@@ -20,6 +20,7 @@ body {
 }
 
 #modalEl .bg-white {
+    position: relative;
     border: 2px solid #bf18958f;
     height: 450px;
     /* width: 500px; */
@@ -44,26 +45,44 @@ body {
 }
 
 #bigScoreEl {
-    color: #bf18958f;
+    color: #cf16a19c;
 }
 
-.points, #difficultBig {
+.points {
     color: #2c8089;
     font-size: 1.1em;
     font-weight: bold;
-    font-style: italic;
     padding: 0.5em;
+    font-family: 'Dancing Script', cursive;
+}
+
+#difficultBig {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    color: #9aa547eb;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.3em;
+    font-weight: bold;
 }
 
 #guideEl {
-    color: #bd207de3;
+    color: #8cc2d3e3;
     font-size: 1em;
     font-weight: bold;
     font-style: italic; 
     font-family: 'Advent Pro';
+    border-radius: 10px;
+    background-color: #2d12516e;
+    box-shadow: 0 4px 8px rgba(189, 144, 144, 0.1);
+    padding: 0.7em 0;
+    margin: 0 2em;
 }
 #guideEl p {
     padding: 0.3em 0; 
+}
+#guideEl .g-ctn {
+    color: rgb(12 163 223);
 }
 
 #score-container, #bonus-container, #mto-container, #bestScore-container {
@@ -105,14 +124,15 @@ body {
 }
 
 #startGameBtn {
-    transition: background-color 0.5s ease, color 0.5s ease;
+    margin-top: 1.5em;
+    /* transition: background-color 0.5s ease, color 0.5s ease; */
 }
 
-#startGameBtn:hover {
+/* #startGameBtn:hover {
     background-color: rgba(15, 72, 122, 0.795);
     color: rgb(104, 255, 117);
     transition: background-color 1s ease, color 3s ease;
-}
+} */
 
 @keyframes shake {
     0%, 100% {
@@ -157,3 +177,7 @@ body {
 #infinityEl {
     color: #138112d6;
 }
+
+
+
+

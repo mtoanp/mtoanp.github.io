@@ -22,6 +22,7 @@ const bestScoreEl = document.getElementById("bestScoreEl");
 const mtoEl = document.getElementById("mtoEl");
 
 const startGameBtn = document.getElementById("startGameBtn");
+const startGameBtnContent = document.getElementById("startGameBtnContent");
 const modalEl = document.getElementById("modalEl");
 const modalContentEl = document.getElementById("modalContentEl");
 const guideEl = document.getElementById("guideEl");
@@ -305,7 +306,7 @@ function animate() {
           bestScoreEl.innerHTML = bestScore
         }
         bigScoreEl.innerText = score;
-        startGameBtn.innerText = "Restart Game";
+        startGameBtnContent.innerText = "Restart";
         modalEl.style.display = "flex";
         difficultBig.innerHTML = 'Difficult ' + difficult
         modalContentEl.classList.add('gameover')
