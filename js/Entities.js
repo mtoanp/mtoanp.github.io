@@ -33,25 +33,17 @@ export class Player extends Entity {
 
   draw() {
     super.draw()
-    if (this.type == "image") this.imageDraw()
+    if (this.type == "avatar") this.imageDraw()
   }
   
   imageDraw() {
     this.image = new Image();
     this.image.src = this.url;
-
     ctx.drawImage(this.image, 
-        this.x - this.radius*0.9, 
-        this.y - this.radius*0.9,
-        this.radius*1.8, this.radius*1.8);
+        this.x - this.radius*1.2, 
+        this.y - this.radius*1.2,
+        this.radius*2.4, this.radius*2.4);
   }
-
-  // munitionDrawn(munition) {
-  //   ctx.font = "20px Comic Sans MS";
-  //   ctx.fillStyle = "red";
-  //   ctx.textAlign = "center";
-  //   ctx.fillText(munition.rocketBullet, canvas.width/2, canvas.height/2 + 7);
-  // }
 }
 
 
@@ -87,7 +79,7 @@ export class Enemy extends Projectable {
 
   update() {
     super.update();
-    if (this.type == "lucky") this.imageDraw()
+    if (this.type === "lucky" || this.type === "boss") this.imageDraw()
   }
 
   imageDraw() {
@@ -95,9 +87,9 @@ export class Enemy extends Projectable {
     this.image.src = this.url;
 
     ctx.drawImage(this.image, 
-        this.x - this.radius*0.9, 
-        this.y - this.radius*0.9,
-        this.radius*1.8, this.radius*1.8);
+        this.x - this.radius, 
+        this.y - this.radius,
+        this.radius*2, this.radius*2);
   }
 }
 

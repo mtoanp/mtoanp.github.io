@@ -28,7 +28,11 @@ const modalContentEl = document.getElementById("modalContentEl");
 const guideEl = document.getElementById("guideEl");
 const bigScoreEl = document.getElementById("bigScoreEl");
 
-const smileyGif = "../assets/images/smiley.gif"
+// avatar
+const smileyAvatar = "../assets/images/smiley.png"
+const luckyAvatar = "../assets/images/lucky.png"
+const bossAvatar = "../assets/images/boss.png"
+
 // Audi Resources
 const gunshotSound = '../audio/gunshot.mp3'
 const rocketSound = '../audio/rocket.mp3'
@@ -61,7 +65,7 @@ const difficultBase = 500
 
 function init() {
   // player = new Player(canvas.width / 2, canvas.height / 2, 15, "white");
-  player = new Player(canvas.width / 2, canvas.height / 2, 15, "white", "image", smileyGif);
+  player = new Player(canvas.width / 2, canvas.height / 2, 15, "", "avatar", smileyAvatar);
   projectiles = [];
   enemies = [];
   particles = [];
@@ -84,7 +88,7 @@ function spawnEnemiesLoop() {
   let delay = difficultMax - difficult
   ennemyLoop = setInterval(() => {
     if (!isPaused) {
-      let luckyMob = successRate(0.1)      // 10%
+      let luckyMob = successRate(0.05)      // 10%
       let mob = luckyMob ? 'lucky' : 'mob' // 10%
       spawnEnemy(mob)
     }
@@ -103,9 +107,10 @@ function spawnEnemy(type = 'mob') {
     let radius, avatar
     if(type === 'boss') {
       radius = 70
+      avatar = bossAvatar
     } else if(type === 'lucky') {
       radius = 20
-      avatar = smileyGif
+      avatar = luckyAvatar
     } else {
       radius = Math.random() * (30 - 4) + 4;
     }
@@ -252,6 +257,10 @@ function animate() {
             playSound('boss') 
             addBonus()
             score += 1000;
+          } else if(enemy.type === 'lucky') {
+            playSound('explosive') 
+            addBonus()
+            score += 500;
           } else {
             playSound('explosive')
             score += 250;
@@ -279,7 +288,7 @@ function animate() {
       clearInterval(ennemyLoop);      // Clear the existing interval
       spawnEnemiesLoop()              // Call with new Interval
       difficultEl.innerHTML = difficult;
-      if ([3, 6, 9].includes(difficult)) spawnEnemy('boss')
+      if ([1, 3, 6, 9].includes(difficult)) spawnEnemy('boss')
     } 
 
 
@@ -292,6 +301,7 @@ function animate() {
 
     if (distPlayerEnemy - enemy.radius - player.radius <= 0) {
       playSound('self')
+      
       // particles creation for engame sceen
       for (let i = 0; i < 8; i++) {
         // random red, green and blue value
@@ -315,9 +325,12 @@ function animate() {
         );
       }
 
-      gsap.to(player, {
-        radius: 0
-      });
+      setTimeout(() => {
+        gsap.to(player, {
+          radius: 0
+        });
+        enemies.splice(enemyIndex, 1);
+      }, 70);
       player.status = 'dead'
 
       // GAMEOVER + SCORE 
