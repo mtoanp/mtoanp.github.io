@@ -33,21 +33,18 @@ export class Player extends Entity {
 
   draw() {
     super.draw()
-    if (this.type == "image") {
-      this.image = new Image();
-      this.image.src = this.url;
-
-      ctx.drawImage(this.image, 
-          this.x - this.radius*0.9, 
-          this.y - this.radius*0.9,
-          this.radius*1.8, this.radius*1.8);
-    }
+    if (this.type == "image") this.imageDraw()
   }
   
-  // draw(munition) {
-  //   super.draw()
-  //   this.munitionDrawn(munition)
-  // }
+  imageDraw() {
+    this.image = new Image();
+    this.image.src = this.url;
+
+    ctx.drawImage(this.image, 
+        this.x - this.radius*0.9, 
+        this.y - this.radius*0.9,
+        this.radius*1.8, this.radius*1.8);
+  }
 
   // munitionDrawn(munition) {
   //   ctx.font = "20px Comic Sans MS";
@@ -82,9 +79,25 @@ export class Projectile extends Projectable {
 
 
 export class Enemy extends Projectable {
-  constructor(x, y, radius, color, velocity, type) {
+  constructor(x, y, radius, color, velocity, type = 'mob', url = '') {
     super(x, y, radius, color, velocity);
-    this.type = type || 'mob'
+    this.type = type
+    this.url = url
+  }
+
+  update() {
+    super.update();
+    if (this.type == "lucky") this.imageDraw()
+  }
+
+  imageDraw() {
+    this.image = new Image();
+    this.image.src = this.url;
+
+    ctx.drawImage(this.image, 
+        this.x - this.radius*0.9, 
+        this.y - this.radius*0.9,
+        this.radius*1.8, this.radius*1.8);
   }
 }
 

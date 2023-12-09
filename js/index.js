@@ -28,6 +28,7 @@ const modalContentEl = document.getElementById("modalContentEl");
 const guideEl = document.getElementById("guideEl");
 const bigScoreEl = document.getElementById("bigScoreEl");
 
+const smileyGif = "../assets/images/smiley.gif"
 // Audi Resources
 const gunshotSound = '../audio/gunshot.mp3'
 const rocketSound = '../audio/rocket.mp3'
@@ -60,7 +61,7 @@ const difficultBase = 500
 
 function init() {
   // player = new Player(canvas.width / 2, canvas.height / 2, 15, "white");
-  player = new Player(canvas.width / 2, canvas.height / 2, 15, "white", "image", "../assets/images/smiley.gif");
+  player = new Player(canvas.width / 2, canvas.height / 2, 15, "white", "image", smileyGif);
   projectiles = [];
   enemies = [];
   particles = [];
@@ -83,15 +84,32 @@ function spawnEnemiesLoop() {
   let delay = difficultMax - difficult
   ennemyLoop = setInterval(() => {
     if (!isPaused) {
-      spawnEnemy()
+      let luckyMob = successRate(0.1)      // 10%
+      let mob = luckyMob ? 'lucky' : 'mob' // 10%
+      spawnEnemy(mob)
     }
   }, delay * 200 + 200);
 }
 
+function successRate(rate) {
+  // Generate a random boolean with a 10% chance of being true
+  // let randomBoolean = Math.random() < 0.1;
+  let randomBoolean = Math.random() < rate;
+  return randomBoolean;
+}
 
 function spawnEnemy(type = 'mob') {
     // random radius
-    const radius = type === 'boss'? 70 : Math.random() * (30 - 4) + 4;
+    let radius, avatar
+    if(type === 'boss') {
+      radius = 70
+    } else if(type === 'lucky') {
+      radius = 20
+      avatar = smileyGif
+    } else {
+      radius = Math.random() * (30 - 4) + 4;
+    }
+    // console.log(type + ' : ' + radius)
 
     // random red, green and blue value
     const r = Math.floor(Math.random() * 256);
@@ -125,7 +143,8 @@ function spawnEnemy(type = 'mob') {
     };
 
     // add a new enemy in enemies array
-    enemies.push(new Enemy(x, y, radius, color, velocity, type));
+    enemies.push(new Enemy(x, y, radius, color, velocity, type, avatar));
+    // enemies.push(new Enemy(x, y, radius, color, velocity, type), "image", smileyGif);
 }
 
 
@@ -150,9 +169,9 @@ function animate() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // console.log('spawn player')
   // draw the player in the canvas
-  if(player.status === 'alive')
-    player.draw();
+  if(player.status === 'alive')  player.draw();
 
   // go through the particles array to update all particle positions
   particles.forEach((particle, index) => {
@@ -249,19 +268,19 @@ function animate() {
           } 
         }, 0);
         scoreEl.innerText = score;
-        
-
-        // Check and update difficult base on score
-        let dif = Math.floor( score / (2000 + difficult*difficultBase) );
-        if (difficult < dif && difficult < difficultMax) {
-          difficult = dif
-          clearInterval(ennemyLoop);  // Clear the existing interval
-          spawnEnemiesLoop()              // Call with new Interval
-          difficultEl.innerHTML = difficult;
-          if ([3, 6, 9].includes(difficult)) spawnEnemy('boss')
-        } 
       }
-    });
+    });  // PROJECTILES Block
+
+
+    // Check and update difficult base on score
+    let lvl = Math.floor( score / (2000 + difficult*difficultBase) );
+    if (difficult < lvl && difficult < difficultMax) {
+      difficult = lvl
+      clearInterval(ennemyLoop);      // Clear the existing interval
+      spawnEnemiesLoop()              // Call with new Interval
+      difficultEl.innerHTML = difficult;
+      if ([3, 6, 9].includes(difficult)) spawnEnemy('boss')
+    } 
 
 
     // -------------------------------------------------
@@ -317,8 +336,8 @@ function animate() {
     }
 
 
-    enemy.update();
-  });
+    enemy.update();  // re-Drawn ennemy !
+  }); // ENEMIES Block
 }
 
 
