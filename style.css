@@ -56,16 +56,17 @@ body {
 }
 
 #guideEl {
-    color: #2c8089;
+    color: #bd207de3;
     font-size: 1em;
     font-weight: bold;
     font-style: italic; 
+    font-family: 'Advent Pro';
 }
 #guideEl p {
     padding: 0.3em 0; 
 }
 
-#score-container, #bonus-container, #mto-container {
+#score-container, #bonus-container, #mto-container, #bestScore-container {
     color: aliceblue;
     position: fixed;
     background-color: #6e217d21;
@@ -77,6 +78,7 @@ body {
     align-items: center;
     border-radius: 10px;
     padding: 1em;
+    font-family: 'Dancing Script', cursive;
 }
 
 #bonus-container {
@@ -84,17 +86,22 @@ body {
     right: 1em;
 }
 
-#mto-container {
+#bestScore-container {
     left: 1em;
     bottom: 1em;
 }
 
+#mto-container {
+    right: 1em;
+    bottom: 1em;
+    /* font-family: 'Dancing Script', cursive; */
+    font-size: 1.3em;
+}
+
 .controlEl {
-    width: 350px;
+    color: rgba(104, 255, 117, 0.514);
     position: absolute;
-    bottom: 2em;
-    /* font-weight: normal; */
-    text-align: center;
+    bottom: 7em;
 }
 
 #startGameBtn {
@@ -102,7 +109,7 @@ body {
 }
 
 #startGameBtn:hover {
-    background-color: rgb(107, 175, 235);
+    background-color: rgba(15, 72, 122, 0.795);
     color: rgb(104, 255, 117);
     transition: background-color 1s ease, color 3s ease;
 }
@@ -121,4 +128,32 @@ body {
 
 .shake-element {
     animation: shake 0.5s ease-in-out 1; /* Adjust the duration and timing function as needed */
+}
+
+#munitionsEl {
+    position: absolute;
+    bottom: 1em;
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.rocket-card, .infinity-card {
+    color: #e5d4d4d6;
+    background-color: #6e217d21;
+    border-radius: 10px;
+    padding: 0.3em 0.7em;
+    margin: 0 0.2em;
+    font-size: 1.5em;
+    text-align: center;
+    opacity: 0.7;
+}
+
+#rocketEl {
+    color: #c72929d6;
+}
+
+#infinityEl {
+    color: #138112d6;
 }

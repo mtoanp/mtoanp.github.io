@@ -5,22 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JS Game with OOP</title>
-    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Advent Pro' rel='stylesheet'>
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.8.13/tailwind.min.css"
         integrity="sha512-KO1h5ynYuqsFuEicc7DmOQc+S9m2xiCKYlC3zcZCSEw0RGDsxcMnppRaMZnb0DdzTDPaW22ID/gAGCZ9i+RT/w=="
         crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <audio id="gunshotEl" src="./audio/gunshot.mp3" preload="auto"></audio>
-    <audio id="rocketEl" src="./audio/rocket.mp3" preload="auto"></audio>
-    <audio id="infinityEl" src="./audio/infinity.mp3" preload="auto"></audio>
-    <audio id="explosiveEl" src="./audio/pop.mp3" preload="auto"></audio>
-    <audio id="bossEl" src="./audio/boss.mp3" preload="auto"></audio>
-    <audio id="selfEl" src="./audio/self.mp3" preload="auto"></audio>
+    <audio id="gunshotSoundEl" src="./audio/gunshot.mp3" preload="auto"></audio>
+    <audio id="rocketSoundEl" src="./audio/rocket.mp3" preload="auto"></audio>
+    <audio id="infinitySoundEl" src="./audio/infinity.mp3" preload="auto"></audio>
+    <audio id="explosiveSoundEl" src="./audio/pop.mp3" preload="auto"></audio>
+    <audio id="bossSoundEl" src="./audio/boss.mp3" preload="auto"></audio>
+    <audio id="selfSoundEl" src="./audio/self.mp3" preload="auto"></audio>
 
     <div id="score-container"
       class="fixed text-white text-sm ml-2 mt-1 select-none"
@@ -30,11 +33,17 @@
     </div>
 
     <div id="bonus-container" class="right">
+      Bonus
       <div id="bonusEl">+ 0/0</div>
     </div>
 
+    <div id="bestScore-container" class="">
+      Best
+      <div id="bestScoreEl">0</div>
+    </div>
+
     <div id="mto-container" class="">
-      <div id="mto">by mto</div>
+      <div id="mtoEl"></div>
     </div>
 
     <div id="modalEl"
@@ -47,11 +56,11 @@
         </div>
 
         <div id="guideEl">
-          <p>Autoshooting every 0.5s</p>
+          <p>Auto-shooting every 0.5s</p>
           <p>Left  Clkick: Rocket (every 3s / max 4)</p>
           <p>Right Clkick: Infinity Bullet (stock: 4)</p>
-          <p>Kill boss to get the bonus</p>
-          <p class="controlEl">Space : Pause / Unpause the Game</p>
+          <p>Kill Boss to get the bonus</p>
+          
         </div>
 
         <div>
@@ -63,8 +72,21 @@
           </button>
         </div>
       </div>
+      <p class="controlEl">Space : Pause / Unpause the Game</p>
     </div>
     
+    <div id="munitionsEl">
+      <div class="rocket-card">
+        <i class="bi bi-rocket"></i>
+        <div id="rocketEl">4</div>
+      </div>
+      
+      <div class="infinity-card">
+        <i class="bi bi-infinity"></i>
+        <div id="infinityEl">4</div>
+      </div>
+    </div>
+
     <canvas id="container-game"></canvas>
 
     <script

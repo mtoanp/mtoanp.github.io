@@ -31,7 +31,7 @@ export class Player extends Entity {
   }
 
 
-  draw(munition) {
+  draw() {
     super.draw()
     if (this.type == "image") {
       this.image = new Image();
@@ -42,7 +42,6 @@ export class Player extends Entity {
           this.y - this.radius*0.9,
           this.radius*1.8, this.radius*1.8);
     }
-    this.munitionDrawn(munition)
   }
   
   // draw(munition) {
@@ -50,12 +49,12 @@ export class Player extends Entity {
   //   this.munitionDrawn(munition)
   // }
 
-  munitionDrawn(munition) {
-    ctx.font = "20px Comic Sans MS";
-    ctx.fillStyle = "red";
-    ctx.textAlign = "center";
-    ctx.fillText(munition.rocketBullet, canvas.width/2, canvas.height/2 + 7);
-  }
+  // munitionDrawn(munition) {
+  //   ctx.font = "20px Comic Sans MS";
+  //   ctx.fillStyle = "red";
+  //   ctx.textAlign = "center";
+  //   ctx.fillText(munition.rocketBullet, canvas.width/2, canvas.height/2 + 7);
+  // }
 }
 
 

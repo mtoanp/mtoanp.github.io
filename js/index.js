@@ -11,23 +11,30 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 // DOM elements for UI
+const rocketEl = document.getElementById("rocketEl");
+const infinityEl = document.getElementById("infinityEl");
+
 const scoreEl = document.getElementById("scoreEl");
 const difficultEl = document.getElementById("difficultEl");
 const difficultBig = document.getElementById("difficultBig");
 const bonusEl = document.getElementById("bonusEl");
+const bestScoreEl = document.getElementById("bestScoreEl");
+const mtoEl = document.getElementById("mtoEl");
+
 const startGameBtn = document.getElementById("startGameBtn");
 const modalEl = document.getElementById("modalEl");
 const modalContentEl = document.getElementById("modalContentEl");
 const guideEl = document.getElementById("guideEl");
 const bigScoreEl = document.getElementById("bigScoreEl");
-const gunshotSound = document.getElementById("gunshotEl");
-const rocketSound = document.getElementById("rocketEl");
-const infinitySound = document.getElementById("infinityEl");
-const explosiveSound = document.getElementById("explosiveEl");
-const bossSound = document.getElementById("bossEl");
-const selfSound = document.getElementById("selfEl");
-const bg = '../assets/images/gameover.jpg'
+
+const gunshotSound = document.getElementById("gunshotSoundEl");
+const rocketSound = document.getElementById("rocketSoundEl");
+const infinitySound = document.getElementById("infinitySoundEl");
+const explosiveSound = document.getElementById("explosiveSoundEl");
+const bossSound = document.getElementById("bossSoundEl");
+const selfSound = document.getElementById("selfSoundEl");
 modalContentEl.classList.add('gamestart')
+mtoEl.innerHTML = 'by mto'
 
 // -------------------------------------------------------------
 // INITIALIZE
@@ -40,6 +47,7 @@ let bonus = [];
 let ennemyLoop
 
 let score = 0;
+let bestScore = 0
 let coords = {x:0, y:0}
 let munition = {}
 let difficult = 0
@@ -60,6 +68,8 @@ function init() {
   scoreEl.innerText = score;
   bigScoreEl.innerText = score;
   difficultEl.innerHTML = difficult;
+  rocketEl.innerHTML = munition.rocketBullet;
+  infinityEl.innerHTML = munition.infinityBullet;
   bonusEl.innerHTML = '+' + bonus.rocket + '/' + bonus.infinity
 }
 
@@ -138,7 +148,7 @@ function animate() {
 
   // draw the player in the canvas
   if(player.status === 'alive')
-    player.draw(munition);
+    player.draw();
 
   // go through the particles array to update all particle positions
   particles.forEach((particle, index) => {
@@ -198,7 +208,15 @@ function animate() {
         // HIT
         // -------------------------------------------------
         // reduce the radius of enemy or remove enemy
-        let degat = (projectile.type === 'rocket') ? 25 : 10
+        let degat
+        if(projectile.type === 'rocket') {
+          degat = 25
+        } else if(projectile.type === 'infinity') {
+          degat = 20
+        } else {
+          degat = 10
+        }
+          
 
         if (enemy.radius - degat > 5) {   // alive
           score += degat * 10;  
@@ -243,7 +261,7 @@ function animate() {
 
 
     // -------------------------------------------------
-    // end game condition
+    // END GAME
     // -------------------------------------------------
 
     // detection of collision between the player and an enemy
@@ -279,9 +297,13 @@ function animate() {
       });
       player.status = 'dead'
 
-      // end game timeout
+      // GAMEOVER + SCORE 
       setTimeout(() => {
         cancelAnimationFrame(animationId);
+        if(score > bestScore) {
+          bestScore = score
+          bestScoreEl.innerHTML = bestScore
+        }
         bigScoreEl.innerText = score;
         startGameBtn.innerText = "Restart Game";
         modalEl.style.display = "flex";
@@ -325,11 +347,11 @@ const shooter = (x, y, type = 'normal') => {
     if (type === 'rocket') {
         color = 'red'
         radius = 10
-        munition.rocketBullet--;
+        rocketEl.innerHTML = --munition.rocketBullet;
     } else if (type === 'infinity') {
         color = 'green'
         radius = 3
-        munition.infinityBullet--;
+        infinityEl.innerHTML = --munition.infinityBullet;
     }
 
     let projectile = new Projectile(player.x, player.y, radius, color, velocity, type);
@@ -410,7 +432,7 @@ function addBonus() {
       break;
     case 1:
       bonus.infinity++
-      munition.infinityBullet++
+      infinityEl.innerHTML = ++munition.infinityBullet;
       msg = '+ 1 Infinity'
       color = 'green'
       break;
@@ -447,7 +469,7 @@ canvas.addEventListener("mouseout", function(event) {
 
 function chargeRocket() {
   if (munition.rocketBullet < munition.rocketMax)
-    munition.rocketBullet++;
+    rocketEl.innerHTML = ++munition.rocketBullet;
 }
 
 // Mouseover event
