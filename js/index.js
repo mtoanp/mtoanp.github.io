@@ -493,7 +493,7 @@ function addBonus(type = 'munition') {
       switch (randomBonus) {
         case 0:
           bonus.doubleShot = true
-          msg = '+ 30% Doubleshot'
+          msg = '+ Doubleshot'
           break;
         case 1:
           bonus.multiShot = true
