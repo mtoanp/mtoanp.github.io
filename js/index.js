@@ -511,12 +511,12 @@ window.addEventListener("contextmenu", (event) => {
 function addBonus(type = 'munition') {
   let msg, color
 
-  if(type === 'passive' && lvl < 10) {
+  if(type === 'passive' && lvl < 12) {
     color = 'yellow'
-    if(lvl <= 3) {
+    if(lvl < 6) {
         bonus.doubleShot = true
         msg = '+ Doubleshot'
-    } else if(lvl <= 6) {
+    } else if(lvl < 9) {
         bonus.multiShot = true
         msg = '+ Multi Shot'
     } else {
