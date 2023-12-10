@@ -7,7 +7,13 @@
 body {
     background-color: black;
     overflow: hidden;
-    /* color: white; */
+    background: no-repeat fixed url('./assets/images/bg.jpg');
+    background-size: cover;
+}
+
+canvas {
+    /* background: no-repeat fixed url('./assets/images/bg.jpg');
+    background-size: cover; */
 }
 
 #game-container {
@@ -17,6 +23,9 @@ body {
 
 #modalEl {
     /* background: url('./assets/images/gameover.jpg'); */
+    opacity: 1;
+    transition: opacity 1.5s ease-in-out;
+    /* background-color: #6e217d21; */
 }
 
 #modalEl .bg-white {
@@ -25,9 +34,9 @@ body {
     height: 450px;
     /* width: 500px; */
     border-radius: 10px;
-    background-color: #6e217d21;
+    background-color: #0e1335b5;
 
-    display: flex;
+    display: flex; 
     flex-direction: column;
     justify-content: space-between;
     padding: 3em;
@@ -35,7 +44,8 @@ body {
 }
 
 .gamestart {
-    background: no-repeat url('./assets/images/gamestart2.jpg');
+    background-color: #2c8089;
+    /* background: no-repeat url('./assets/images/gamestart2.jpg'); */
     background-size: cover;
 }
 
@@ -77,7 +87,10 @@ body {
     box-shadow: 0 4px 8px rgba(189, 144, 144, 0.1);
     padding: 0.7em 0;
     margin: 0 2em;
+    /* opacity: 1; */
+    transition: opacity 1.5s ease-in-out;
 }
+
 #guideEl p {
     padding: 0.3em 0; 
 }
@@ -117,6 +130,7 @@ body {
 
 #version-container {
     top: 1em;
+    font-size: 2em;
 }
 
 #mto-container {
@@ -133,22 +147,6 @@ body {
 
 #startGameBtn {
     margin-top: 1.5em;
-}
-
-@keyframes shake {
-    0%, 100% {
-      transform: translateX(0);
-    }
-    25%, 75% {
-      transform: translateX(-10px);
-    }
-    50% {
-      transform: translateX(10px);
-    }
-}
-
-.shake-element {
-    animation: shake 0.5s ease-in-out 1; /* Adjust the duration and timing function as needed */
 }
 
 #munitionsEl {
@@ -179,6 +177,22 @@ body {
     color: #138112d6;
 }
 
+
+.shake-element {
+    animation: shake 0.5s ease-in-out 1; /* Adjust the duration and timing function as needed */
+}
+
+@keyframes shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    25%, 75% {
+      transform: translateX(-10px);
+    }
+    50% {
+      transform: translateX(10px);
+    }
+}
 
 
 

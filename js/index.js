@@ -70,10 +70,10 @@ const speedMax = 10
 const difficultyBase = 500
 let globalVol = 50
 let isMuted = false
-
+let isPlay = false
 
 function init() {
-  // player = new Player(canvas.width / 2, canvas.height / 2, 15, "white");
+  isPlay = true
   player = new Player(canvas.width / 2, canvas.height / 2, 30, "", "avatar", earthAvatar);
   projectiles = [];
   enemies = [];
@@ -180,12 +180,18 @@ function animate() {
 
   animationId = requestAnimationFrame(animate);
 
+  // Set the global alpha (opacity)
+  // ctx.globalAlpha = 0.9;
+
   // Clear the canvas on each frame
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // fill the canvas with a rectangle on each frame
   ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Set the global alpha (opacity)
+  // ctx.globalAlpha = 1;
 
   // draw the player in the canvas
   if(player.status === 'alive')  player.draw();
@@ -366,6 +372,7 @@ function animate() {
         enemies.splice(enemyIndex, 1);
       }, 70);
       player.status = 'dead'
+      isPlay = false
 
       // GAMEOVER + SCORE 
       setTimeout(() => {
@@ -376,9 +383,10 @@ function animate() {
         }
         bigScoreEl.innerText = score;
         startGameBtnContent.innerText = "Restart";
-        modalEl.style.display = "flex";
         difficultyBig.innerHTML = 'Difficulty ' + lvl
         modalContentEl.classList.add('gameover')
+        // fadeGameBoard()
+        modalEl.style.display = "flex";
       }, 1500);
     }
 
@@ -401,7 +409,7 @@ const shooter = (x, y, type = 'normal') => {
 
   // create new projectile
   let color = 'white'
-  let radius = 2
+  let radius = 3
   if (type === 'rocket') {
       color = 'red'
       radius = 10
@@ -656,8 +664,9 @@ document.addEventListener("keydown", function(event) {
 // -------------------------------------------------------------
 startGameBtn.addEventListener("click", () => {
   init();
+  // fadeGameBoard() 
   modalEl.style.display = "none";
-  guideEl.style.display = 'none'
+  guideEl.style.display = 'none';
   addBonus()
   // shieldUp()
   setTimeout(() => {
@@ -674,7 +683,23 @@ window.addEventListener("mousemove", (event) => {
 setInterval(autoShooting, 400);
 setInterval(chargeRocket, 3000);
 
-
+function fadeGameBoard() {
+  // isPlay = !isPlay
+  if(isPlay) {
+    modalEl.style.opacity = 0
+    guideEl.style.opacity = 0
+    setInterval(() => {
+      modalEl.style.display = "none";
+      guideEl.style.display = 'none';
+      modalEl.style.opacity = 1
+    }, 500)
+  } 
+  // else {
+  //   modalEl.style.opacity = 1
+  //   modalEl.style.display = "flex";
+  // }
+  // console.log('isplay: ' + isPlay)
+}
 // -------------------------------------------------------------
 // SOUND
 // -------------------------------------------------------------
@@ -685,7 +710,7 @@ volumeEl.oninput = function() {
 
 volumeToggleEl.addEventListener('click', () => {
   isMuted = !isMuted
-  console.log('toggle Muted: ' + isMuted)
+  // console.log('toggle Muted: ' + isMuted)
   if(isMuted) {
     volumeToggleEl.classList.remove('bi-volume-off-fill')
     volumeToggleEl.classList.add('bi-volume-mute-fill')
