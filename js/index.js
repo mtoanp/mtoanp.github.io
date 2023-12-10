@@ -59,7 +59,7 @@ let score = 0;
 let bestScore = 0
 let coords = {x:0, y:0}
 let munition = {}
-let difficulty = 0
+let difficulty = 0, lvl = 0
 const difficultyMax = 10
 const difficultyBase = 500
 
@@ -73,7 +73,7 @@ function init() {
   munition = {rocketBullet: 0, infinityBullet: 4, rocketMax: 4, infinityMax: 10}
 
   score = 0;
-  difficulty = 0;
+  difficulty = 0, lvl = 0;
   scoreEl.innerText = score;
   bigScoreEl.innerText = score;
   difficultyEl.innerHTML = difficulty;
@@ -274,8 +274,9 @@ function animate() {
         setTimeout(() => {
           if ( (projectile.type === 'normal') || 
                (projectile.type === 'double') ||
-               (projectile.type === 'rocket' && enemy.type === 'boss') ) 
-          {
+               (projectile.type === 'multishot') ||
+               (projectile.type === 'rocket' && enemy.type === 'boss') 
+          ){
             projectiles.splice(projectileIndex, 1);
           } 
         }, 0);
@@ -284,15 +285,20 @@ function animate() {
     });  // PROJECTILES Block
 
 
+
     // Check and update difficulty base on score
-    let lvl = Math.floor( score / (2000 + difficulty*difficultyBase) );
-    if (difficulty < lvl && difficulty < difficultyMax) {
+    // reset Mob Spawn speed
+    let ilvl = Math.floor( score / (2000 + difficulty*difficultyBase) );
+    if (lvl < ilvl && difficulty < difficultyMax) {
+      lvl = ilvl
       difficulty = lvl
       clearInterval(ennemyLoop);      // Clear the existing interval
       spawnEnemiesLoop()              // Call with new Interval
-      difficultyEl.innerHTML = difficulty;
-      if ([1, 3, 6, 9].includes(difficulty)) spawnEnemy('boss')
+      difficultyEl.innerHTML = lvl;
+      if (lvl % 3 === 0) spawnEnemy('boss')
+      // if ([1, 3, 6, 9].includes(difficulty)) spawnEnemy('boss')
     } 
+
 
 
     // -------------------------------------------------
@@ -359,8 +365,34 @@ function animate() {
 
 
 // -------------------------------------------------------------
-// ACTION
+// SHOTS
 // -------------------------------------------------------------
+const shooter = (x, y, type = 'normal') => {
+  const angle = Math.atan2(y - player.y, x - player.x);
+  const velocity = {
+    x: Math.cos(angle) * 5,
+    y: Math.sin(angle) * 5,
+  };
+
+  // create new projectile
+  let color = 'white'
+  let radius = 2
+  if (type === 'rocket') {
+      color = 'red'
+      radius = 10
+      rocketEl.innerHTML = --munition.rocketBullet;
+  } else if (type === 'infinity') {
+      color = 'green'
+      radius = 3
+      infinityEl.innerHTML = --munition.infinityBullet;
+  } else if (type === 'double') {
+     color = 'yellow'
+  }
+
+  let projectile = new Projectile(player.x, player.y, radius, color, velocity, type);
+  projectiles.push(projectile);
+}
+
 // loopShoot for Infinity Bullet
 function loopShoot(projectile) {
   const angle = Math.atan2(projectile.y - player.y, projectile.x - player.x);
@@ -397,38 +429,16 @@ const multiShot = (x, y) => {
     color = 'yellow'
     radius = 2
 
-    let projectile = new Projectile(player.x, player.y, radius, color, velocity);
+    let projectile = new Projectile(player.x, player.y, radius, color, velocity, 'multishot');
     projectiles.push(projectile);
   }
 }
 
-const shooter = (x, y, type = 'normal') => {
-    const angle = Math.atan2(y - player.y, x - player.x);
-    const velocity = {
-      x: Math.cos(angle) * 5,
-      y: Math.sin(angle) * 5,
-    };
-  
-    // create new projectile
-    let color = 'white'
-    let radius = 2
-    if (type === 'rocket') {
-        color = 'red'
-        radius = 10
-        rocketEl.innerHTML = --munition.rocketBullet;
-    } else if (type === 'infinity') {
-        color = 'green'
-        radius = 3
-        infinityEl.innerHTML = --munition.infinityBullet;
-    } else if (type === 'double') {
-       color = 'yellow'
-    }
-
-    let projectile = new Projectile(player.x, player.y, radius, color, velocity, type);
-    projectiles.push(projectile);
-}
 
 
+// -------------------------------------------------------------
+// ACTION
+// -------------------------------------------------------------
 // click listener to add a new projectile in direction of the mouse pointer
 window.addEventListener("click", (event) => {
   if(!isPaused) {
@@ -439,7 +449,7 @@ window.addEventListener("click", (event) => {
       shooter(x, y, 'rocket')
       type = 'rocket'
     } else {
-      shooter(x, y)
+      // shooter(x, y)
     }
     playSound(type)
   }
@@ -455,8 +465,6 @@ window.addEventListener("contextmenu", (event) => {
       if (munition.infinityBullet > 0) {
         shooter(x, y, 'infinity')
         type = 'infinity'
-      } else {
-        shooter(x, y)
       }
       playSound(type)  
     }
@@ -467,6 +475,40 @@ function addBonus(type = 'munition') {
   let msg, color
   // Generate a random number between 0 and 1 // 0.01
   const randomNumber = Math.random();
+
+  if(type === 'passive') {
+    color = 'yellow'
+    // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
+    const randomBonus = Math.round(randomNumber); // 0 or 1
+    if (difficulty <= 3) {  // && !bonus.doubleShot && !bonus.multiShot
+      switch (randomBonus) {
+        case 0:
+          bonus.doubleShot = true
+          msg = '+ 30% Doubleshot'
+          break;
+        case 1:
+          bonus.multiShot = true
+          msg = '+ Multi Shot'
+          break;
+        // case 2:
+        //   bonus.shot360 = true
+        //   msg = '+ 360° Shot'
+        //   break;
+      }
+    } else if(difficulty <= 6) {
+      if(!bonus.doubleShot) {
+        bonus.doubleShot = true
+        msg = '+ 30% Doubleshot'
+      } else {
+        bonus.multiShot = true
+        msg = '+ Multi Shot'
+      }
+    } else {
+      type === 'munition'
+    }
+  }
+  
+
   if(type === 'munition') {
     const randomBinary = Math.round(randomNumber); // 0 or 1
     switch (randomBinary) {
@@ -485,31 +527,8 @@ function addBonus(type = 'munition') {
     }
     bonusEl.innerHTML = '+' + bonus.rocket + '/' + bonus.infinity
 
-  } else if(type === 'passive') {
-    color = 'yellow'
-    // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
-    const randomBonus = Math.round(randomNumber); // 0 or 1
-    if (!bonus.doubleShot && !bonus.multiShot) {
-      switch (randomBonus) {
-        case 0:
-          bonus.doubleShot = true
-          msg = '+ 30% Doubleshot'
-          break;
-        case 1:
-          bonus.multiShot = true
-          msg = '+ Multi Shot'
-          break;
-        // case 2:
-        //   bonus.shot360 = true
-        //   msg = '+ 360° Shot'
-        //   break;
-      }
-    } else {
-      bonus.doubleShot = true;
-      bonus.multiShot = true;
-      msg = '+ All passive'
-    }
-  }
+  }  
+
 
   showMsg(msg, color)
 }
@@ -568,7 +587,6 @@ document.addEventListener("keydown", function(event) {
     }
   } else if(event.key === 'Enter') {
     // Test
-    // audioEl.play()
     playSound('rocket')
   }
 });
