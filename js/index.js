@@ -66,7 +66,7 @@ let coords = {x:0, y:0}
 let msg = {msg: '', color: ''}
 let munition = {}
 let lvl = 0, speed = 0
-const speedMax = 10
+const speedMax = 15
 const difficultyBase = 500
 let globalVol = 50
 let isMuted = false
@@ -102,7 +102,7 @@ function spawnEnemiesLoop() {
       let mob = luckyMob ? 'lucky' : 'mob' // 10%
       spawnEnemy(mob)
     }
-  }, delay * 200 + 200);
+  }, delay * 150 + 200);
 }
 
 function successRate(rate) {
