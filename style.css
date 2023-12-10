@@ -85,7 +85,7 @@ body {
     color: rgb(12 163 223);
 }
 
-#score-container, #bonus-container, #mto-container, #bestScore-container {
+#score-container, #bonus-container, #mto-container, #bestScore-container, #version-container {
     color: aliceblue;
     position: fixed;
     background-color: #6e217d21;
@@ -100,6 +100,11 @@ body {
     font-family: 'Dancing Script', cursive;
 }
 
+#score-container{
+    top: 1em;
+    left: 1em;
+}
+
 #bonus-container {
     top: 1em;
     right: 1em;
@@ -108,6 +113,10 @@ body {
 #bestScore-container {
     left: 1em;
     bottom: 1em;
+}
+
+#version-container {
+    top: 1em;
 }
 
 #mto-container {
