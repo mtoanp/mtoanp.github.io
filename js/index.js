@@ -640,7 +640,7 @@ setInterval(chargeRocket, 3000);
 function playSound(type = 'gun') {   
   switch (type) {
     case 'rocket':
-      playSoundDetail(rocketSound, 0.1, 1.5)
+      playSoundDetail(rocketSound, 0.5, 1.5)
       break;
     case 'infinity':
       playSoundDetail(infinitySound, 0.5, 1)
@@ -649,13 +649,13 @@ function playSound(type = 'gun') {
       playSoundDetail(explosiveSound, 0.2, 1.5)
       break;
     case 'boss':
-      playSoundDetail(bossSound, 0.8, 1, 1)
+      playSoundDetail(bossSound, 0.9, 1, 1)
       break;
     case 'self':
       playSoundDetail(selfSound, 0.3, 1)
       break;
     default:
-      playSoundDetail(gunshotSound, 0.05, 5)
+      playSoundDetail(gunshotSound, 0.1, 5)
       break;
   }
 }
