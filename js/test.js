@@ -13,6 +13,7 @@ const object = {
     y: canvas.height / 2,
     radius: 20,
     angle: 0,
+    // speed: 0.1,
     speed: 0.02,
 };
 
@@ -31,10 +32,10 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw the circular path
-    ctx.beginPath();
-    ctx.arc(canvas.width / 2, canvas.height / 2, 100, 0, 2 * Math.PI);
-    ctx.fillStyle = 'white';
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.arc(canvas.width / 2, canvas.height / 2, 100, 0, 2 * Math.PI);
+    // ctx.fillStyle = 'white';
+    // ctx.stroke();
 
     // Draw the moving object
     ctx.beginPath();

@@ -76,7 +76,7 @@ function init() {
   projectiles = [];
   enemies = [];
   particles = [];
-  bonus = {rocket: 0, infinity: 0, doubleShot: false, multiShot: false, shot360: false};
+  bonus = {rocket: 0, infinity: 0, doubleShot: false, multiShot: false, shield: true};
   munition = {rocketBullet: 0, infinityBullet: 4, rocketMax: 4, infinityMax: 10}
 
   score = 0;
@@ -202,18 +202,23 @@ function animate() {
 
   // go through the projectiles array to update all projectile positions
   projectiles.forEach((projectile, index) => {
-    if (
-      projectile.x - projectile.radius < 0 ||
-      projectile.x + projectile.radius > canvas.width ||
-      projectile.y - projectile.radius < 0 ||
-      projectile.y + projectile.radius > canvas.height
-    ) {
-      projectiles.splice(index, 1); 
-      if(projectile.type === 'infinity') {
-        loopShoot(projectile)
+    if(projectile.type !== 'shield') {
+      if (
+        projectile.x - projectile.radius < 0 ||
+        projectile.x + projectile.radius > canvas.width ||
+        projectile.y - projectile.radius < 0 ||
+        projectile.y + projectile.radius > canvas.height
+      ) {
+        projectiles.splice(index, 1); 
+        if(projectile.type === 'infinity') {
+          loopShoot(projectile)
+        }
       }
+      projectile.update();
+
+    } else {
+      projectile.shield();
     }
-    projectile.update();
   });
 
 
@@ -252,9 +257,12 @@ function animate() {
         let degat
         if(projectile.type === 'rocket') {
           degat = 25
-        } else if(projectile.type === 'infinity') {
+        } else if( projectile.type === 'infinity' ) {
           degat = 20
-        } else if(projectile.type === 'double' || projectile.type === 'multishot') {
+        } else if( projectile.type === 'double' || 
+                   projectile.type === 'multishot' ||
+                   projectile.type === 'shield'
+        ) {
           degat = 20
         } else {
           degat = 10
@@ -449,7 +457,21 @@ const multiShot = (x, y) => {
   }
 }
 
+const shieldUp = () => {
+  const velocity = {x: 0, y: 0}
+  // create new projectile
+  const type = 'shield'
+  let color = '#e50faf9c'
+  // let color = 'violet'
+  let radius = 3
 
+  let shield1 = new Projectile(player.x, player.y, radius, color, velocity, type, 0, 200);
+  let shield2 = new Projectile(player.x, player.y, radius, color, velocity, type, 180, 200);
+  let shield3 = new Projectile(player.x, player.y, radius, color, velocity, type, 360, 200);
+  projectiles.push(shield1);
+  projectiles.push(shield2);
+  projectiles.push(shield3);
+}
 
 // -------------------------------------------------------------
 // ACTION
@@ -488,43 +510,53 @@ window.addEventListener("contextmenu", (event) => {
 
 function addBonus(type = 'munition') {
   let msg, color
-  // Generate a random number between 0 and 1 // 0.01
-  const randomNumber = Math.random();
 
-  if(type === 'passive') {
+  if(type === 'passive' && lvl < 10) {
     color = 'yellow'
-    // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
-    const randomBonus = Math.round(randomNumber); // 0 or 1
-    if (lvl <= 3) {  // && !bonus.doubleShot && !bonus.multiShot
-      switch (randomBonus) {
-        case 0:
-          bonus.doubleShot = true
-          msg = '+ Doubleshot'
-          break;
-        case 1:
-          bonus.multiShot = true
-          msg = '+ Multi Shot'
-          break;
-        // case 2:
-        //   bonus.shot360 = true
-        //   msg = '+ 360° Shot'
-        //   break;
-      }
-    } else if(lvl <= 6) {
-      if(!bonus.doubleShot) {
+    if(lvl <= 3) {
         bonus.doubleShot = true
-        msg = '+ Double Shot'
-      } else {
+        msg = '+ Doubleshot'
+    } else if(lvl <= 6) {
         bonus.multiShot = true
         msg = '+ Multi Shot'
-      }
     } else {
-      type === 'munition'
+        bonus.shield = true
+        msg = '+ Shield'
     }
+
+    // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
+    // const randomBonus = Math.round(randomNumber); // 0 or 1
+    // if (lvl <= 3) {  // && !bonus.doubleShot && !bonus.multiShot
+    //   switch (randomBonus) {
+    //     case 0:
+    //       bonus.doubleShot = true
+    //       msg = '+ Doubleshot'
+    //       break;
+    //     case 1:
+    //       bonus.multiShot = true
+    //       msg = '+ Multi Shot'
+    //       break;
+    //     case 2:
+    //       bonus.shield = true
+    //       msg = '+ Shield'
+    //       break;
+    //   }
+    // } else if(lvl <= 6) {
+    //   if(!bonus.doubleShot) {
+    //     bonus.doubleShot = true
+    //     msg = '+ Double Shot'
+    //   } else {
+    //     bonus.multiShot = true
+    //     msg = '+ Multi Shot'
+    //   }
+    // } else {
+    //   type === 'munition'
+    // }
   }
   
 
   if(type === 'munition') {
+    const randomNumber = Math.random();
     const randomBinary = Math.round(randomNumber); // 0 or 1
     switch (randomBinary) {
       case 0:
@@ -556,7 +588,6 @@ function setMsg(msgContent, color, delay = 1500) {
 }
 
 function drawMsg(directMsg = '', color = 'white', time = 1000) {
-  console.log('drawn msg')
   ctx.font = "50px Comic Sans MS";
   ctx.fillStyle = directMsg !== '' ? color : msg.color;
   ctx.textAlign = "center";
@@ -574,8 +605,6 @@ function autoShooting() {
         doubleShot(coords.x, coords.y)
       } else if(bonus.multiShot && successRate(0.3)) {
         multiShot(coords.x, coords.y)
-      // } else if(bonus.shot360 && successRate(0.1)) {
-        // console.log('shot 360')
       } else {
         shooter(coords.x, coords.y)
         playSound()
@@ -625,6 +654,7 @@ startGameBtn.addEventListener("click", () => {
   modalEl.style.display = "none";
   guideEl.style.display = 'none'
   addBonus()
+  // shieldUp()
   setTimeout(() => {
     animate();
   }, 300 )

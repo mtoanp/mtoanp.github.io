@@ -63,9 +63,18 @@ class Projectable extends Entity {
 
 
 export class Projectile extends Projectable {
-  constructor(x, y, radius, color, velocity, type) {
+  constructor(x, y, radius, color, velocity, type, angle = 0, range = 100) {
     super(x, y, radius, color, velocity);
     this.type = type || "normal";
+    this.angle = angle;
+    this.range = range;
+  }
+
+  shield() {
+    this.angle += 0.02;
+    this.draw();
+    this.x = canvas.width / 2 + Math.cos(this.angle ) * this.range;
+    this.y = canvas.height / 2 + Math.sin(this.angle ) * this.range;
   }
 }
 
