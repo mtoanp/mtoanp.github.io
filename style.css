@@ -85,7 +85,7 @@ body {
     color: rgb(12 163 223);
 }
 
-#score-container, #bonus-container, #mto-container, #bestScore-container, #version-container {
+#score-container, #bonus-container, #mto-container, #bestScore-container, #version-container, #player-container {
     color: aliceblue;
     position: fixed;
     background-color: #6e217d21;
@@ -120,9 +120,8 @@ body {
 }
 
 #mto-container {
-    right: 1em;
-    bottom: 1em;
-    /* font-family: 'Dancing Script', cursive; */
+    right: 0.75em;
+    bottom: 0.75em;
     font-size: 1.3em;
 }
 
@@ -134,14 +133,7 @@ body {
 
 #startGameBtn {
     margin-top: 1.5em;
-    /* transition: background-color 0.5s ease, color 0.5s ease; */
 }
-
-/* #startGameBtn:hover {
-    background-color: rgba(15, 72, 122, 0.795);
-    color: rgb(104, 255, 117);
-    transition: background-color 1s ease, color 3s ease;
-} */
 
 @keyframes shake {
     0%, 100% {

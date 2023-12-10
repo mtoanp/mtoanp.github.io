@@ -28,6 +28,9 @@ const modalContentEl = document.getElementById("modalContentEl");
 const guideEl = document.getElementById("guideEl");
 const bigScoreEl = document.getElementById("bigScoreEl");
 
+const volumeEl = document.getElementById("volumeEl");
+const volumeToggleEl = document.getElementById("volumeToggleEl");
+
 // avatar
 const smileyAvatar = "../assets/images/smiley.png"
 const luckyAvatar = "../assets/images/lucky.png"
@@ -63,6 +66,9 @@ let munition = {}
 let lvl = 0, speed = 0
 const speedMax = 10
 const difficultyBase = 500
+let globalVol = 50
+let isMuted = false
+
 
 function init() {
   // player = new Player(canvas.width / 2, canvas.height / 2, 15, "white");
@@ -637,33 +643,53 @@ setInterval(chargeRocket, 3000);
 // -------------------------------------------------------------
 // SOUND
 // -------------------------------------------------------------
-function playSound(type = 'gun') {   
-  switch (type) {
-    case 'rocket':
-      playSoundDetail(rocketSound, 0.5, 1.5)
-      break;
-    case 'infinity':
-      playSoundDetail(infinitySound, 0.5, 1)
-      break;
-    case 'explosive':
-      playSoundDetail(explosiveSound, 0.2, 1.5)
-      break;
-    case 'boss':
-      playSoundDetail(bossSound, 0.9, 1, 1)
-      break;
-    case 'self':
-      playSoundDetail(selfSound, 0.3, 1)
-      break;
-    default:
-      playSoundDetail(gunshotSound, 0.1, 5)
-      break;
+// Update the current slider value (each time you drag the slider handle)
+volumeEl.oninput = function() {
+  globalVol = this.value;
+}
+
+volumeToggleEl.addEventListener('click', () => {
+  isMuted = !isMuted
+  console.log('toggle Muted: ' + isMuted)
+  if(isMuted) {
+    volumeToggleEl.classList.remove('bi-volume-off-fill')
+    volumeToggleEl.classList.add('bi-volume-mute-fill')
+  } else {
+    volumeToggleEl.classList.remove('bi-volume-mute-fill')
+    volumeToggleEl.classList.add('bi-volume-off-fill')
+  }
+})
+
+
+function playSound(type = 'gun') {   // Equalizer
+  if(!isMuted) {
+    switch (type) {
+      case 'rocket':
+        playSoundDetail(rocketSound, 0.2, 1.5)
+        break;
+      case 'infinity':
+        playSoundDetail(infinitySound, 0.4, 1)
+        break;
+      case 'explosive':
+        playSoundDetail(explosiveSound, 0.2, 1.5)
+        break;
+      case 'boss':
+        playSoundDetail(bossSound, 1, 1, 1)
+        break;
+      case 'self':
+        playSoundDetail(selfSound, 0.3, 1)
+        break;
+      default:
+        playSoundDetail(gunshotSound, 0.1, 5)
+        break;
+    }
   }
 }
 
 function playSoundDetail(audioSrc, volume, speed, currentTime = 0, repeat = 1) {
     let audio = new Audio(audioSrc)
     // audio.src = audioSrc
-    audio.volume = volume;
+    audio.volume = volume * (globalVol / 100);
     audio.playbackRate = speed;
     audio.currentTime = currentTime;
     audio.play();

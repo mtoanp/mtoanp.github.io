@@ -1,0 +1,17 @@
+#player-container {
+    bottom: 1em;
+    right: 8em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.6;
+}
+
+#volumeEl {
+    margin: 0 0.5em 0 1em;
+}
+#volumeToggleEl {
+    font-size: 1.5em;
+    margin-top: 0.2em;
+}
