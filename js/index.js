@@ -248,6 +248,8 @@ function animate() {
           degat = 25
         } else if(projectile.type === 'infinity') {
           degat = 20
+        } else if(projectile.type === 'double' || projectile.type === 'multishot') {
+          degat = 20
         } else {
           degat = 10
         }
@@ -303,7 +305,7 @@ function animate() {
       spawnEnemiesLoop()              // Call with new Interval
       difficultyEl.innerHTML = lvl;
       if (lvl % 3 === 0) spawnEnemy('boss')
-      // if ([1, 3, 6, 9].includes(lvl)) spawnEnemy('boss')
+      // if ([0, 1, 2, 3, 6, 9].includes(lvl)) spawnEnemy('boss')
     } 
 
 
@@ -505,7 +507,7 @@ function addBonus(type = 'munition') {
     } else if(lvl <= 6) {
       if(!bonus.doubleShot) {
         bonus.doubleShot = true
-        msg = '+ 30% Doubleshot'
+        msg = '+ Double Shot'
       } else {
         bonus.multiShot = true
         msg = '+ Multi Shot'
@@ -638,7 +640,7 @@ setInterval(chargeRocket, 3000);
 function playSound(type = 'gun') {   
   switch (type) {
     case 'rocket':
-      playSoundDetail(rocketSound, 0.05, 3)
+      playSoundDetail(rocketSound, 0.1, 1.5)
       break;
     case 'infinity':
       playSoundDetail(infinitySound, 0.5, 1)
@@ -647,22 +649,23 @@ function playSound(type = 'gun') {
       playSoundDetail(explosiveSound, 0.2, 1.5)
       break;
     case 'boss':
-      playSoundDetail(bossSound, 0.5, 3)
+      playSoundDetail(bossSound, 0.8, 1, 1)
       break;
     case 'self':
       playSoundDetail(selfSound, 0.3, 1)
       break;
     default:
-      playSoundDetail(gunshotSound, 0.1, 5)
+      playSoundDetail(gunshotSound, 0.05, 5)
       break;
   }
 }
 
-function playSoundDetail(audioSrc, volume, speed, repeat = 1) {
+function playSoundDetail(audioSrc, volume, speed, currentTime = 0, repeat = 1) {
     let audio = new Audio(audioSrc)
     // audio.src = audioSrc
     audio.volume = volume;
     audio.playbackRate = speed;
+    audio.currentTime = currentTime;
     audio.play();
 }
 // -------------------------------------------------------------
