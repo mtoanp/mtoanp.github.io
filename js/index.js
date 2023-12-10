@@ -32,8 +32,10 @@ const volumeEl = document.getElementById("volumeEl");
 const volumeToggleEl = document.getElementById("volumeToggleEl");
 
 // avatar
-const smileyAvatar = "../assets/images/smiley.png"
-const luckyAvatar = "../assets/images/lucky.png"
+const earthAvatar = "../assets/images/earth.png"
+// const smileyAvatar = "../assets/images/smiley.png"
+// const luckyAvatar = "../assets/images/lucky.png"
+const luckyAvatar = "../assets/images/moon.png"
 const bossAvatar = "../assets/images/boss.png"
 
 // Audi Resources
@@ -72,7 +74,7 @@ let isMuted = false
 
 function init() {
   // player = new Player(canvas.width / 2, canvas.height / 2, 15, "white");
-  player = new Player(canvas.width / 2, canvas.height / 2, 15, "", "avatar", smileyAvatar);
+  player = new Player(canvas.width / 2, canvas.height / 2, 30, "", "avatar", earthAvatar);
   projectiles = [];
   enemies = [];
   particles = [];
