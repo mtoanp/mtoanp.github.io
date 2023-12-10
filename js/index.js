@@ -58,9 +58,10 @@ let ennemyLoop
 let score = 0;
 let bestScore = 0
 let coords = {x:0, y:0}
+let msg = {msg: '', color: ''}
 let munition = {}
-let difficulty = 0, lvl = 0
-const difficultyMax = 10
+let lvl = 0, speed = 0
+const speedMax = 10
 const difficultyBase = 500
 
 function init() {
@@ -73,10 +74,11 @@ function init() {
   munition = {rocketBullet: 0, infinityBullet: 4, rocketMax: 4, infinityMax: 10}
 
   score = 0;
-  difficulty = 0, lvl = 0;
+  msg = {msg: '', color: ''};
+  lvl = 0, speed = 0;
   scoreEl.innerText = score;
   bigScoreEl.innerText = score;
-  difficultyEl.innerHTML = difficulty;
+  difficultyEl.innerHTML = lvl;
   rocketEl.innerHTML = munition.rocketBullet;
   infinityEl.innerHTML = munition.infinityBullet;
   bonusEl.innerHTML = '+' + bonus.rocket + '/' + bonus.infinity
@@ -85,7 +87,7 @@ function init() {
 
 // function to generate every second a new enemy coming from outside of the screen randomly
 function spawnEnemiesLoop() {
-  let delay = difficultyMax - difficulty
+  let delay = speedMax - speed
   ennemyLoop = setInterval(() => {
     if (!isPaused) {
       let luckyMob = successRate(0.05)      // 10%
@@ -170,13 +172,18 @@ function animate() {
 
   animationId = requestAnimationFrame(animate);
 
-  // fill the canvas with a rectangle
+  // Clear the canvas on each frame
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // fill the canvas with a rectangle on each frame
   ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // console.log('spawn player')
   // draw the player in the canvas
   if(player.status === 'alive')  player.draw();
+
+  // Drawn MSG
+  if(msg.msg !== '')  drawMsg();
 
   // go through the particles array to update all particle positions
   particles.forEach((particle, index) => {
@@ -288,15 +295,15 @@ function animate() {
 
     // Check and update difficulty base on score
     // reset Mob Spawn speed
-    let ilvl = Math.floor( score / (2000 + difficulty*difficultyBase) );
-    if (lvl < ilvl && difficulty < difficultyMax) {
+    let ilvl = Math.floor( score / (2000 + speed*difficultyBase) );
+    if (lvl < ilvl) {
       lvl = ilvl
-      difficulty = lvl
+      if(speed < speedMax) speed = lvl
       clearInterval(ennemyLoop);      // Clear the existing interval
       spawnEnemiesLoop()              // Call with new Interval
       difficultyEl.innerHTML = lvl;
       if (lvl % 3 === 0) spawnEnemy('boss')
-      // if ([1, 3, 6, 9].includes(difficulty)) spawnEnemy('boss')
+      // if ([1, 3, 6, 9].includes(lvl)) spawnEnemy('boss')
     } 
 
 
@@ -352,7 +359,7 @@ function animate() {
         bigScoreEl.innerText = score;
         startGameBtnContent.innerText = "Restart";
         modalEl.style.display = "flex";
-        difficultyBig.innerHTML = 'Difficulty ' + difficulty
+        difficultyBig.innerHTML = 'Difficulty ' + lvl
         modalContentEl.classList.add('gameover')
       }, 1500);
     }
@@ -480,7 +487,7 @@ function addBonus(type = 'munition') {
     color = 'yellow'
     // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
     const randomBonus = Math.round(randomNumber); // 0 or 1
-    if (difficulty <= 3) {  // && !bonus.doubleShot && !bonus.multiShot
+    if (lvl <= 3) {  // && !bonus.doubleShot && !bonus.multiShot
       switch (randomBonus) {
         case 0:
           bonus.doubleShot = true
@@ -495,7 +502,7 @@ function addBonus(type = 'munition') {
         //   msg = '+ 360° Shot'
         //   break;
       }
-    } else if(difficulty <= 6) {
+    } else if(lvl <= 6) {
       if(!bonus.doubleShot) {
         bonus.doubleShot = true
         msg = '+ 30% Doubleshot'
@@ -529,15 +536,23 @@ function addBonus(type = 'munition') {
 
   }  
 
-
-  showMsg(msg, color)
+  setMsg(msg, color)
 }
 
-function showMsg(msg, color, time = 1000) {
+
+function setMsg(msgContent, color, delay = 1500) {
+  msg = {msg: msgContent, color: color}
+  setTimeout(() => {
+    msg = {msg: '', color: ''}
+  }, delay)
+}
+
+function drawMsg(directMsg = '', color = 'white', time = 1000) {
+  console.log('drawn msg')
   ctx.font = "50px Comic Sans MS";
-  ctx.fillStyle = color;
+  ctx.fillStyle = directMsg !== '' ? color : msg.color;
   ctx.textAlign = "center";
-  ctx.fillText(msg, canvas.width/2, canvas.height/2 - 200);
+  ctx.fillText(directMsg !== '' ? directMsg : msg.msg, canvas.width/2, canvas.height/2 - 200);
 }
 
 // -------------------------------------------
