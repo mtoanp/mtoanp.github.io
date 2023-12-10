@@ -522,6 +522,9 @@ function addBonus(type = 'munition') {
     } else {
         bonus.shield = true
         msg = '+ Shield'
+        setTimeout(() => {
+          shieldUp()
+        }, 1000)
     }
 
     // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
