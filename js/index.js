@@ -518,6 +518,39 @@ window.addEventListener("contextmenu", (event) => {
 });
 
 
+function addPassives() {
+  let msg, color
+
+  const randomNumber = Math.random();
+
+  if(bonus.doubleShot && bonus.multiShot && bonus.shield) {
+    addBonus()
+    return
+  }
+
+  if(!bonus.doubleShot && !bonus.multiShot && !bonus.shield) {
+    const randomPassive = Math.round(randomNumber * 2); // 0 or 1 or 2
+    switch (randomPassive) {
+      case 0:
+        bonus.doubleShot = true
+        msg = '+ Doubleshot'
+        break;
+      case 1:
+        bonus.multiShot = true
+        msg = '+ Multi Shot'
+        break;
+      case 2:
+        bonus.shield = true
+        msg = '+ Shield'
+        break;
+    }
+  // } else if() {
+    
+  }
+
+  setMsg(msg, color)
+}
+
 function addBonus(type = 'munition') {
   let msg, color
 
@@ -540,20 +573,7 @@ function addBonus(type = 'munition') {
     // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
     // const randomBonus = Math.round(randomNumber); // 0 or 1
     // if (lvl <= 3) {  // && !bonus.doubleShot && !bonus.multiShot
-    //   switch (randomBonus) {
-    //     case 0:
-    //       bonus.doubleShot = true
-    //       msg = '+ Doubleshot'
-    //       break;
-    //     case 1:
-    //       bonus.multiShot = true
-    //       msg = '+ Multi Shot'
-    //       break;
-    //     case 2:
-    //       bonus.shield = true
-    //       msg = '+ Shield'
-    //       break;
-    //   }
+
     // } else if(lvl <= 6) {
     //   if(!bonus.doubleShot) {
     //     bonus.doubleShot = true
