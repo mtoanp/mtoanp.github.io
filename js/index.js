@@ -30,6 +30,7 @@ const bigScoreEl = document.getElementById("bigScoreEl");
 
 const volumeEl = document.getElementById("volumeEl");
 const volumeToggleEl = document.getElementById("volumeToggleEl");
+const soundtrackToggleEl = document.getElementById("soundtrackToggleEl");
 
 // avatar
 const earthAvatar = "../assets/images/earth.png"
@@ -39,6 +40,7 @@ const luckyAvatar = "../assets/images/moon.png"
 const bossAvatar = "../assets/images/boss.png"
 
 // Audi Resources
+const soundtrackSound = '../audio/soundtrack.mp3'
 const gunshotSound = '../audio/gunshot.mp3'
 const rocketSound = '../audio/rocket.mp3'
 const infinitySound = '../audio/infinity.mp3'
@@ -70,7 +72,11 @@ const speedMax = 15
 const difficultyBase = 500
 let globalVol = 50
 let isMuted = false
+let soundTrackIsPlay = true
+let soundtrack = new Audio(soundtrackSound)
 let isPlay = false
+
+playSound('soundtrack')
 
 function init() {
   isPlay = true
@@ -173,7 +179,7 @@ let isPaused = false
 
 // animate function executed recursively
 function animate() {
-  if (isPaused) {
+  if (isPaused || !isPlay) {
     cancelAnimationFrame(animationId);
     return;
   }
@@ -372,21 +378,12 @@ function animate() {
         enemies.splice(enemyIndex, 1);
       }, 70);
       player.status = 'dead'
-      isPlay = false
 
       // GAMEOVER + SCORE 
       setTimeout(() => {
+        isPlay = false
         cancelAnimationFrame(animationId);
-        if(score > bestScore) {
-          bestScore = score
-          bestScoreEl.innerHTML = bestScore
-        }
-        bigScoreEl.innerText = score;
-        startGameBtnContent.innerText = "Restart";
-        difficultyBig.innerHTML = 'Difficulty ' + lvl
-        modalContentEl.classList.add('gameover')
-        // fadeGameBoard()
-        modalEl.style.display = "flex";
+        fadeGameBoard()
       }, 1500);
     }
 
@@ -440,17 +437,17 @@ function loopShoot(projectile) {
 
 const doubleShot = (x, y) => {
   shooter(x, y, 'double')
-  playSound()
+  playSound('gunshot')
   setTimeout(() => {
     shooter(x, y, 'double')
-    playSound()
+    playSound('gunshot')
   }, 100)
 }
 
 const multiShot = (x, y) => {
   let angle, velocity, color, radius, yy = y - 2*10
 
-  playSound()
+  playSound('gunshot')
   for(let i = 0; i < 5; i++) {
     yy += i*10
     angle = Math.atan2(yy - player.y, x - player.x);
@@ -459,7 +456,7 @@ const multiShot = (x, y) => {
       y: Math.sin(angle) * 5,
     };
 
-    color = 'yellow'
+    color = 'yellow'  // yellow
     radius = 2
 
     let projectile = new Projectile(player.x, player.y, radius, color, velocity, 'multishot');
@@ -471,8 +468,7 @@ const shieldUp = () => {
   const velocity = {x: 0, y: 0}
   // create new projectile
   const type = 'shield'
-  let color = '#e50faf9c'
-  // let color = 'violet'
+  let color = '#e50faf9c' // violet
   let radius = 3
 
   let shield1 = new Projectile(player.x, player.y, radius, color, velocity, type, 0, 200);
@@ -491,14 +487,11 @@ window.addEventListener("click", (event) => {
   if(!isPaused) {
     let x = event.clientX
     let y = event.clientY 
-    let type = 'normal'
     if (munition.rocketBullet > 0) {
       shooter(x, y, 'rocket')
-      type = 'rocket'
-    } else {
-      // shooter(x, y)
+      playSound('rocket')
     }
-    playSound(type)
+    
   }
 });
 
@@ -511,41 +504,36 @@ window.addEventListener("contextmenu", (event) => {
       let type = 'normal'
       if (munition.infinityBullet > 0) {
         shooter(x, y, 'infinity')
-        type = 'infinity'
+        playSound('infinity')  
       }
-      playSound(type)  
     }
 });
 
 
 const activeDoubleShot = () => {
   bonus.doubleShot = true
-  setMsg('+ Doubleshot', 'yellow')
+  setMsg('+ Double Shot', 'yellow')
 }
 const activeMultiShot = () => {
   bonus.multiShot = true
-  setMsg('+ Doubleshot', 'yellow')
+  setMsg('+ Multi Shot', 'yellow')
 }
 const activeShield = () => {
   bonus.shield = true
-  setMsg('+ Doubleshot', 'yellow')
+  setMsg('+ Shield', 'yellow')
 }
 
 function addPassives() {
   const randomNumber = Math.random();
 
   if(bonus.doubleShot && bonus.multiShot && bonus.shield) {
-    console.log('all passive activated')
     addBonus()
     return
   }
   
   const randomBinary = Math.round(randomNumber); // 0 or 1
-  // console.log(randomBinary, 'randomBinary')
   if(!bonus.doubleShot && !bonus.multiShot && !bonus.shield) {
-    console.log('none passive')
     const randomPassive = Math.round(randomNumber * 2); // 0 or 1 or 2
-    // console.log(randomPassive, 'randomPassive')
     switch (randomPassive) {
       case 0:
         activeDoubleShot()
@@ -580,11 +568,10 @@ function addPassives() {
       activeDoubleShot()
     } else if(!bonus.multiShot) {
       activeMultiShot()
-    } else if(!bonus.multiShot) {
+    } else if(!bonus.shield) {
       activeShield()
     }
   }
-  console.log(msg)
 }
 
 
@@ -613,7 +600,6 @@ function addBonus(type = 'munition') {
   }  
  
   setMsg(msg, color)
-  console.log(msg)
 }
 
 
@@ -644,7 +630,7 @@ function autoShooting() {
         multiShot(coords.x, coords.y)
       } else {
         shooter(coords.x, coords.y)
-        playSound()
+        playSound('gunshot')
       }
   }
 }
@@ -668,7 +654,7 @@ function chargeRocket() {
 // Mouseover event
 document.addEventListener("keydown", function(event) {   
   // You can perform actions based on the pressed key
-  if(event.key === ' ') {
+  if(event.key === ' ' && isPlay) {
     isPaused = !isPaused
     console.log(isPaused ? 'Paused' : 'Un Pause');
     if (!isPaused) {
@@ -688,25 +674,12 @@ document.addEventListener("keydown", function(event) {
 // -------------------------------------------------------------
 startGameBtn.addEventListener("click", () => {
   init();
-  // fadeGameBoard() 
-  modalEl.style.display = "none";
-  guideEl.style.display = 'none';
-  // addBonus()
-  addPassives()
-
+  fadeGameBoard() 
+  addBonus()
   setTimeout(() => {
-    // animate();
-    addPassives()
-  }, 300 )
-  setTimeout(() => {
-    addPassives()
-  }, 1000 )
-  setTimeout(() => {
-    addPassives()
-  }, 2000 )
-  setTimeout(() => {
-    addPassives()
-  }, 3000 )
+    modalEl.style.display = "none";
+    animate();
+  }, 700 )
   clearInterval(ennemyLoop);      // Clear the existing interval
   spawnEnemiesLoop()              // Call with new Interval
 });
@@ -724,16 +697,22 @@ function fadeGameBoard() {
     modalEl.style.opacity = 0
     guideEl.style.opacity = 0
     setInterval(() => {
-      modalEl.style.display = "none";
+      // modalEl.style.display = "none";
       guideEl.style.display = 'none';
-      modalEl.style.opacity = 1
-    }, 500)
+    }, 1000)
   } 
-  // else {
-  //   modalEl.style.opacity = 1
-  //   modalEl.style.display = "flex";
-  // }
-  // console.log('isplay: ' + isPlay)
+  else {
+    if(score > bestScore) {
+      bestScore = score
+      bestScoreEl.innerHTML = bestScore
+    }
+    bigScoreEl.innerText = score;
+    startGameBtnContent.innerText = "Restart";
+    difficultyBig.innerHTML = 'Difficulty ' + lvl
+    modalContentEl.classList.add('gameover')
+    modalEl.style.opacity = 1
+    modalEl.style.display = "flex";
+  }
 }
 // -------------------------------------------------------------
 // SOUND
@@ -755,10 +734,27 @@ volumeToggleEl.addEventListener('click', () => {
   }
 })
 
+soundtrackToggleEl.addEventListener('click', () => {
+  soundTrackIsPlay = !soundTrackIsPlay
+  if(soundTrackIsPlay) {
+    soundtrackToggleEl.classList.remove('bi-pause-fill')
+    soundtrackToggleEl.classList.add('bi-music-note')
+    playSound('soundtrack')
+  } else {
+    soundtrackToggleEl.classList.remove('bi-music-note')
+    soundtrackToggleEl.classList.add('bi-pause-fill')
+    soundtrackFade()
+    // soundtrack.pause()
+  }
+})
 
-function playSound(type = 'gun') {   // Equalizer
+
+function playSound(type = 'gunshot') {   // Equalizer
   if(!isMuted) {
     switch (type) {
+      case 'gunshot':
+        playSoundDetail(gunshotSound, 0.1, 5)
+        break;
       case 'rocket':
         playSoundDetail(rocketSound, 0.2, 1.5)
         break;
@@ -774,19 +770,45 @@ function playSound(type = 'gun') {   // Equalizer
       case 'self':
         playSoundDetail(selfSound, 0.3, 1)
         break;
+      case 'soundtrack':
+        playSoundtrack(soundtrackSound, 0.5, 1, 0, true)
+        break;
       default:
-        playSoundDetail(gunshotSound, 0.1, 5)
+        playSoundDetail(type, 0.5, 1)
         break;
     }
   }
 }
 
-function playSoundDetail(audioSrc, volume, speed, currentTime = 0, repeat = 1) {
+function soundtrackFade() {
+  let volume = 0.5 * (globalVol / 100); // Initial volume (1.0 is full volume)
+  let fadeOutInterval = setInterval(function() {
+      if (volume > 0) {
+          volume -= 0.05; // Adjust the decrement value for different fade-out speeds
+          soundtrack.volume = volume;
+      } else {
+          clearInterval(fadeOutInterval);
+          soundtrack.pause();
+          // soundtrack.volume = globalVol; // Reset the volume to its original level
+      }
+  }, 100); // Adjust the interval for different fade-out speeds
+}
+
+function playSoundtrack(audioSrc, volume, speed, currentTime = 0, loop = true) {
+  soundtrack.volume = volume * (globalVol / 100);
+  soundtrack.playbackRate = speed;
+  soundtrack.currentTime = currentTime;
+  soundtrack.loop = loop
+  soundtrack.play();
+}
+
+function playSoundDetail(audioSrc, volume, speed, currentTime = 0, loop = false) {
     let audio = new Audio(audioSrc)
     // audio.src = audioSrc
     audio.volume = volume * (globalVol / 100);
     audio.playbackRate = speed;
     audio.currentTime = currentTime;
+    audio.loop = loop
     audio.play();
 }
 // -------------------------------------------------------------

@@ -9,10 +9,11 @@
 }
 
 #volumeEl {
-    margin: 0 0.5em 0 1em;
+    margin: 0 1em 0 0.5em;
 }
-#volumeToggleEl {
+
+#volumeToggleEl, #soundtrackToggleEl {
     font-size: 1.5em;
-    margin-top: 0.2em;
+    margin: 0.2em 0 0 0;
 }
 
