@@ -78,7 +78,7 @@ function init() {
   projectiles = [];
   enemies = [];
   particles = [];
-  bonus = {rocket: 0, infinity: 0, doubleShot: false, multiShot: false, shield: true};
+  bonus = {rocket: 0, infinity: 0, doubleShot: false, multiShot: false, shield: false};
   munition = {rocketBullet: 0, infinityBullet: 4, rocketMax: 4, infinityMax: 10}
 
   score = 0;
@@ -286,7 +286,7 @@ function animate() {
         } else { // kill confirmed
           if (enemy.type === 'boss') {
             playSound('boss') 
-            addBonus('passive')
+            addPassives()
             score += 1000;
           } else if(enemy.type === 'lucky') {
             playSound('explosive') 
@@ -518,75 +518,78 @@ window.addEventListener("contextmenu", (event) => {
 });
 
 
-function addPassives() {
-  let msg, color
+const activeDoubleShot = () => {
+  bonus.doubleShot = true
+  setMsg('+ Doubleshot', 'yellow')
+}
+const activeMultiShot = () => {
+  bonus.multiShot = true
+  setMsg('+ Doubleshot', 'yellow')
+}
+const activeShield = () => {
+  bonus.shield = true
+  setMsg('+ Doubleshot', 'yellow')
+}
 
+function addPassives() {
   const randomNumber = Math.random();
 
   if(bonus.doubleShot && bonus.multiShot && bonus.shield) {
+    console.log('all passive activated')
     addBonus()
     return
   }
-
+  
+  const randomBinary = Math.round(randomNumber); // 0 or 1
+  // console.log(randomBinary, 'randomBinary')
   if(!bonus.doubleShot && !bonus.multiShot && !bonus.shield) {
+    console.log('none passive')
     const randomPassive = Math.round(randomNumber * 2); // 0 or 1 or 2
+    // console.log(randomPassive, 'randomPassive')
     switch (randomPassive) {
       case 0:
-        bonus.doubleShot = true
-        msg = '+ Doubleshot'
+        activeDoubleShot()
         break;
       case 1:
-        bonus.multiShot = true
-        msg = '+ Multi Shot'
+        activeMultiShot()
         break;
       case 2:
-        bonus.shield = true
-        msg = '+ Shield'
+        activeShield()
         break;
     }
-  // } else if() {
-    
+  } else if(!bonus.doubleShot && !bonus.multiShot) {
+    if(randomBinary === 0) {
+      activeDoubleShot()
+    } else {
+      activeMultiShot()
+    }
+  } else if(!bonus.doubleShot && !bonus.shield) {
+    if(randomBinary === 0) {
+      activeDoubleShot()
+    } else {
+      activeShield()
+    }
+  } else if(!bonus.multiShot && !bonus.shield) {
+    if(randomBinary === 0) {
+      activeMultiShot()
+    } else {
+      activeShield()
+    }
+  } else {
+    if(!bonus.doubleShot) {
+      activeDoubleShot()
+    } else if(!bonus.multiShot) {
+      activeMultiShot()
+    } else if(!bonus.multiShot) {
+      activeShield()
+    }
   }
-
-  setMsg(msg, color)
+  console.log(msg)
 }
 
+
 function addBonus(type = 'munition') {
-  let msg, color
-
-  if(type === 'passive' && lvl < 12) {
-    color = 'yellow'
-    if(lvl < 6) {
-        bonus.doubleShot = true
-        msg = '+ Doubleshot'
-    } else if(lvl < 9) {
-        bonus.multiShot = true
-        msg = '+ Multi Shot'
-    } else {
-        bonus.shield = true
-        msg = '+ Shield'
-        setTimeout(() => {
-          shieldUp()
-        }, 300)
-    }
-
-    // const randomBonus = Math.round(randomNumber * 2); // 0  1  2
-    // const randomBonus = Math.round(randomNumber); // 0 or 1
-    // if (lvl <= 3) {  // && !bonus.doubleShot && !bonus.multiShot
-
-    // } else if(lvl <= 6) {
-    //   if(!bonus.doubleShot) {
-    //     bonus.doubleShot = true
-    //     msg = '+ Double Shot'
-    //   } else {
-    //     bonus.multiShot = true
-    //     msg = '+ Multi Shot'
-    //   }
-    // } else {
-    //   type === 'munition'
-    // }
-  }
-  
+  let msg, color 
 
   if(type === 'munition') {
     const randomNumber = Math.random();
@@ -608,8 +611,9 @@ function addBonus(type = 'munition') {
     bonusEl.innerHTML = '+' + bonus.rocket + '/' + bonus.infinity
 
   }  
-
+ 
   setMsg(msg, color)
+  console.log(msg)
 }
 
 
@@ -687,11 +691,22 @@ startGameBtn.addEventListener("click", () => {
   // fadeGameBoard() 
   modalEl.style.display = "none";
   guideEl.style.display = 'none';
-  addBonus()
-  // shieldUp()
+  // addBonus()
+  addPassives()
+
   setTimeout(() => {
-    animate();
+    // animate();
+    addPassives()
   }, 300 )
+  setTimeout(() => {
+    addPassives()
+  }, 1000 )
+  setTimeout(() => {
+    addPassives()
+  }, 2000 )
+  setTimeout(() => {
+    addPassives()
+  }, 3000 )
   clearInterval(ennemyLoop);      // Clear the existing interval
   spawnEnemiesLoop()              // Call with new Interval
 });
