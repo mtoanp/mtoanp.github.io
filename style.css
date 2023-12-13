@@ -134,9 +134,23 @@ canvas {
     font-family: 'Dancing Script', cursive;
 }
 
-#score-container{
+#score-container {
     top: 1em;
     left: 1em;
+    display: flex;
+    flex-direction: row;
+}
+#score-container .s-left {
+    font-size: 3em;
+    color: #dce90dba;
+    margin-right: 0.05em;
+}
+#score-container .s-right p:first-child {
+    margin: 0.3em 0 -0.3em 0.5em;
+}
+#score-container .s-right p:last-child {
+    color: #dce90dba;
+    font-size: 1.3em;
 }
 
 #bonus-container {
