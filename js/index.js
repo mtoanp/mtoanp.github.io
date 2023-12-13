@@ -520,6 +520,7 @@ const activeMultiShot = () => {
 }
 const activeShield = () => {
   bonus.shield = true
+  shieldUp()
   setMsg('+ Shield', 'yellow')
 }
 
