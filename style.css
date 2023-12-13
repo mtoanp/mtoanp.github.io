@@ -77,6 +77,7 @@ canvas {
 }
 
 #guideEl {
+    width: fit-content;
     color: #8cc2d3e3;
     font-size: 1em;
     font-weight: bold;
@@ -86,16 +87,36 @@ canvas {
     background-color: #2d12516e;
     box-shadow: 0 4px 8px rgba(189, 144, 144, 0.1);
     padding: 0.7em 0;
-    margin: 0 2em;
     /* opacity: 1; */
     transition: opacity 1.5s ease-in-out;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #guideEl p {
+    width: 250px;
     padding: 0.3em 0; 
+    text-align: left;
+    /* margin-left: auto;
+    margin-right: auto; */
 }
+#guideEl p i {
+    border: 1px solid gray;
+    padding: 0.2em 0.5em;
+    margin: 0.3em 1em;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #1f413f99;
+    transition: background-color 0.5s ease-in-out;
+}
+#guideEl p i:hover {
+    background-color: #12d6c999;
+    color: white;
+}
+
 #guideEl .g-ctn {
     color: rgb(12 163 223);
+    margin-right: 0.2em;
 }
 
 #score-container, #bonus-container, #mto-container, #bestScore-container, #version-container, #player-container {

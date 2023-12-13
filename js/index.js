@@ -72,11 +72,11 @@ const speedMax = 15
 const difficultyBase = 500
 let globalVol = 50
 let isMuted = false
-let soundTrackIsPlay = true
+let soundTrackIsPlay = false
 let soundtrack = new Audio(soundtrackSound)
 let isPlay = false
 
-playSound('soundtrack')
+// playSound('soundtrack')
 
 function init() {
   isPlay = true
@@ -738,12 +738,12 @@ volumeToggleEl.addEventListener('click', () => {
 soundtrackToggleEl.addEventListener('click', () => {
   soundTrackIsPlay = !soundTrackIsPlay
   if(soundTrackIsPlay) {
-    soundtrackToggleEl.classList.remove('bi-pause-fill')
-    soundtrackToggleEl.classList.add('bi-music-note')
-    playSound('soundtrack')
-  } else {
     soundtrackToggleEl.classList.remove('bi-music-note')
     soundtrackToggleEl.classList.add('bi-pause-fill')
+    playSound('soundtrack')
+  } else {
+    soundtrackToggleEl.classList.remove('bi-pause-fill')
+    soundtrackToggleEl.classList.add('bi-music-note')
     soundtrackFade()
     // soundtrack.pause()
   }
